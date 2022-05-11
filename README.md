@@ -7,9 +7,10 @@ A simple weather web application made with React JS, the OpenWeather API, and st
 You will need an API key for OpenWeather, which can be gotten [here.](https://openweathermap.org/api)
 
 Add this key to the root directory with these steps:
-`touch .env`
-Inside of `.env`, add the following line:
-`REACT_APP_API_KEY = YOUR_API_KEY;`
+* Create the environment file: `touch .env`
+
+* Inside of `.env`, add the following line: `REACT_APP_API_KEY = YOUR_API_KEY;`
+
 Note: the application will not function correctly without being given an API key.
 
 ## Available Scripts
