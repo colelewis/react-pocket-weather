@@ -9,7 +9,7 @@ You will need an API key for OpenWeather, which can be gotten [here.](https://op
 Add this key to the root directory with these steps:
 * Create the environment file: `touch .env`
 
-* Inside of `.env`, add the following line: `REACT_APP_API_KEY = YOUR_API_KEY;`
+* Inside of `.env`, add the following line: `REACT_APP_API_KEY = YOUR_API_KEY`
 
 Note: the application will not function correctly without being given an API key.
 
