@@ -48,6 +48,10 @@ export default class Weather extends Component {
     });
   }
 
+  convertUnix(utime) {
+    return new Date(utime * 1000).toLocaleString();
+  }
+
   Dashboard = () => { // this works, use this template for building functional components
     const geoData = this.state.geoData;
     if (geoData) {
@@ -66,7 +70,7 @@ export default class Weather extends Component {
         </div>
 
         <div className='row container-fluid mx-auto'>
-          
+
           <div className='col bg-primary'> {/*dashboard*/}
             //
           </div>
