@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 function Clock() {
     const [now, setTime] = useState(new Date()); //use current date when triggering an update

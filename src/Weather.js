@@ -1,52 +1,67 @@
-import React, { useState, useEffect } from 'react';
-import useGeolocation from 'react-hook-geolocation';
+import React, { Component } from 'react';
 import Clock from './Clock';
 import './bootstrap.min.css';
 
-function Weather() {
-
   // add icons eventually with this: https://openweathermap.org/weather-conditions#Weather-Condition-Codes-2
-  const API_KEY = process.env.REACT_APP_API_KEY;
 
-  function GeolocationDataFetch(lat, long) {
-    const API_URL = 'https://api.openweathermap.org/data/2.5/weather?lat='+lat+'&lon='+long+'&appid='+API_KEY;
-    const [geoData, setGeoData] = useState();
-    useEffect(() => {
-      fetch(API_URL, {"method": "GET"})
-      .then(fetchedData => fetchedData.json())
-      .then(response => {
-        setGeoData(response)
-      });
-    }, []);
-    console.log(geoData);
-    return geoData;
-  } // gotta use some sort of callback with geolocation api
-
-  function ManualDataFetch(zip, country) {
-    const MANUAL_API_URL = 'https://api.openweathermap.org/data/2.5/weather?zip=' + zip + ',' + country + '&appid=' + API_KEY;
-    const [manualData, setManualData] = useState();
-    useEffect(() => {
-      fetch(MANUAL_API_URL, { "method": "GET" })
-        .then(fetchedData => fetchedData.json())
-        .then(response => {
-          setManualData(response)
-        });
-    }, []);
-    console.log(manualData);
-    // return manualData;
+export default class Weather extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      geoData: null,
+      manualData: null,
+      zip: 0,
+      country: ''
+    };
   }
 
-  function convertUnix(utime) {
-    return new Date(utime * 1000).toLocaleString();
+  componentDidMount() {
+    this.fetchCoordinates()
+      .then((position) => {
+        this.fetchGeoData(position.coords.latitude, position.coords.longitude)
+      })
+      .catch((error) => console.log(error));
   }
 
-  return (
-    <>
-      <div>
+  fetchCoordinates = () => {
+    return new Promise(function (resolve, reject) {
+      navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+  }
+
+  fetchManualData = async () => {
+    const MANUAL_API_URL = 'https://api.openweathermap.org/data/2.5/weather?zip=' + this.state.zip + ',' + this.state.country + '&appid=' + process.env.REACT_APP_API_KEY;
+    const call = await fetch(MANUAL_API_URL);
+    const data = await call.json();
+    this.setState({
+      manualData: data
+    });
+  }
+
+  fetchGeoData = async (lat, long) => {
+    const GEO_API_URL = 'https://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + long + '&appid=' + process.env.REACT_APP_API_KEY;
+    const call = await fetch(GEO_API_URL);
+    const data = await call.json();
+    this.setState({
+      geoData: data
+    });
+  }
+
+  // Dashboard = () => { this works, use this template for building functional components
+  //   const geoData = this.state.geoData;
+  //   if (geoData) {
+  //     return (
+  //       <p>{geoData.base}</p>
+  //     );
+  //   }
+  // }
+
+  render() {
+    return (
+      <>
         <Clock />
-      </div>
-    </>
-  );
+        {/* {this.Dashboard()} */}
+      </>
+    );
+  }
 }
-
-export default Weather;
