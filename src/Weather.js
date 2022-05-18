@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Clock from './components/Clock';
-import { parseUnits } from './Auxiliary';
+import Dashboard from './components/Dashboard';
 import './bootstrap.min.css';
 
 export default class Weather extends Component {
@@ -23,16 +23,17 @@ export default class Weather extends Component {
       .catch((error) => console.log(error));
   }
 
-  componentDidUpdate(prevState) {
-    if (this.state.units !== prevState.units) {
-      // this.componentDidMount();
-      // this.render();
-    }
+  CDMWrapper() { // used to make new API call when units change
+    this.fetchCoordinates()
+      .then((position) => {
+        this.fetchGeoData(position.coords.latitude, position.coords.longitude)
+      })
+      .catch((error) => console.log(error));
   }
 
   fetchCoordinates = () => {
     return new Promise(function (resolve, reject) {
-      navigator.geolocation.getCurrentPosition(resolve, reject);
+      navigator.geolocation.getCurrentPosition(resolve, reject); // HTML5 Geolocation API
     });
   }
 
@@ -54,65 +55,35 @@ export default class Weather extends Component {
     });
   }
 
-  convertUnix(utime) {
-    return new Date(utime * 1000).toLocaleString();
-  }
-
-  Dashboard = () => { // this works, use this template for building functional components
-    const geoData = this.state.geoData;
-    // console.log(geoData);
-    if (geoData) {
-      const ICON_URL = 'http://openweathermap.org/img/wn/' + geoData.weather[0].icon + '.png';
-      return (
-        <div className='container-fluid p-1 text-white'>
-          <img className='mb-2' src={ICON_URL}></img>
-          <p style={{float: 'right'}} className='lead p-2 mb-3'>{geoData.weather[0].description}</p>
-          <div className='row'>
-
-            <div className='col p-2'>
-              <h6 className='lead text-truncate'>Your coordinates are: ({geoData.coord.lat}, {geoData.coord.lon}).</h6>              
-            </div>
-
-            <div className='col mx-auto p-1'>
-              <p className='lead'>Current temperature is {geoData.main.temp} {parseUnits(this.state.units)}.</p>
-              <p className='lead'>It feels like {geoData.main.feels_like} {parseUnits(this.state.units)}.</p>
-              <p className='lead'>Pressure: {geoData.main.pressure} hPa</p>
-              <p className='lead'>Humidity: {geoData.main.humidity}%</p>
-              <p className='lead'>Visibility: {geoData.main.visibility} meters.</p>
-
-            </div>
-
-          </div>
-        </div>
-      );
-    }
-  }
-
-  Outlook = () => {
-
+  UnitSelector = () => {
+    return (
+      <div className='dropdown m-3'>
+        <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Units</button>
+        <ul className='dropdown-menu' aria-labelledby="dropdownMenuButton1">
+          <li><a className="dropdown-item" href="#" onClick={() => { this.setState({ units: 'standard' }); this.CDMWrapper() }}>Standard</a></li>
+          <li><a className="dropdown-item" href="#" onClick={() => { this.setState({ units: 'metric' }); this.CDMWrapper() }}>Metric</a></li>
+          <li><a className="dropdown-item" href="#" onClick={() => { this.setState({ units: 'imperial' }); this.CDMWrapper() }}>Imperial</a></li>
+        </ul>
+      </div>
+    );
   }
 
   render() {
+    const COLOR_CODE = '#4e73ad'; // to eventually be provided by a function to provide a color from the time
     return (
       <>
-        <div className='container-fluid bg-light mb-0'>
+        <div className='container-fluid bg-light mb-0 p-2'>
           <h2>react-pocket-weather</h2>
-          <p className='lead fs-4 text-wrap'>Your current time and date are: <Clock /></p>
-          <div className='dropdown p-3 m-3'>
-            <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Units</button>
-            <ul className='dropdown-menu' aria-labelledby="dropdownMenuButton1">
-              <li><a className="dropdown-item" href="#" onClick={() => {this.setState({ units: 'standard'})}}>Standard</a></li>
-              <li><a className="dropdown-item" href="#" onClick={() => {this.setState({ units: 'metric'})}}>Metric</a></li>
-              <li><a className="dropdown-item" href="#" onClick={() => {this.setState({ units: 'imperial'})}}>Imperial</a></li>
-            </ul>
-          </div>
+          <p className='lead fs-4 text-wrap'>Your current date and time are: <Clock /></p>
+          {this.UnitSelector()}
         </div>
 
         <div className='row container-fluid mx-auto'>
-          <div className='col bg-primary'>
-            {this.Dashboard()}
+          <div className='col text-white' style={{backgroundColor: COLOR_CODE}}>
+            <Dashboard data={this.state} />
           </div>
         </div>
+        
       </>
     );
   }

@@ -8,3 +8,11 @@ export function parseUnits(units) {
             return '\u212A';
     }
 }
+
+export function convertUnix(utime) {
+    return new Date(utime * 1000).toLocaleTimeString();
+}
+
+export function sunlightColorTransition(now) {
+
+}
