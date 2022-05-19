@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { parseUnits, convertUnix } from "../Auxiliary";
+import { parseUnits, parseSpeed, convertUnix } from "../Auxiliary";
 
 export default class Dashboard extends Component {
     constructor(props) {
@@ -19,12 +19,13 @@ export default class Dashboard extends Component {
 
                         <div className='col p-1 lead'>
                             <p>Your coordinates are: ({geoData.coord.lat}, {geoData.coord.lon}).</p>
-                            <p>Sunrise: {convertUnix(geoData.sys.sunrise)}</p>
-                            <p>Sunset: {convertUnix(geoData.sys.sunset)}</p>
+                            <p className='mt-2'>Sunrise: {convertUnix(geoData.sys.sunrise)}</p>
+                            <p className='mt-2'>Sunset: {convertUnix(geoData.sys.sunset)}</p>
 
                             <div className='mt-4'> {/* wind */}
-                                <h5>Wind</h5>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="8%" height="8%" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/></svg>
+                                <h5>Wind speed is currently {geoData.wind.speed} {parseSpeed(this.props.data.units)} at {geoData.wind.deg} degrees.</h5>
+                                <p>Gust speed is at {geoData.wind.gust} {parseSpeed(this.props.data.units)}.</p>
+
                             </div>
 
                         </div>
@@ -40,6 +41,10 @@ export default class Dashboard extends Component {
 
                     </div>
                 </div>
+            );
+        } else {
+            return (
+                <p className='p-3'>Geolocation data is not available right now.</p>
             );
         }
     }

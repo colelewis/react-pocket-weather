@@ -9,6 +9,17 @@ export function parseUnits(units) {
     }
 }
 
+export function parseSpeed(units) {
+    switch (units) {
+        case 'metric':
+            return 'meters/sec';
+        case 'imperial':
+            return 'miles/hour';
+        case 'standard':
+            return 'meters/sec';
+    }
+}
+
 export function convertUnix(utime) {
     return new Date(utime * 1000).toLocaleTimeString();
 }
