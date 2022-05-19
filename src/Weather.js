@@ -97,7 +97,7 @@ export default class Weather extends Component {
 
         <div className='row container-fluid mx-auto'>
           <div className='col text-white' style={{ backgroundColor: COLOR_CODE }}>
-            {/* <Dashboard data={this.state} /> */}
+            <Dashboard data={this.state} />
           </div>
         </div>
 
