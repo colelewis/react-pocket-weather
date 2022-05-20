@@ -8,7 +8,7 @@ export default class Dashboard extends Component {
 
     render() {
         const geoData = this.props.data.geoData;
-        // console.log(geoData);
+        console.log(geoData);
         if (geoData) {
             const ICON_URL = 'http://openweathermap.org/img/wn/' + geoData.weather[0].icon + '.png';
             return (
@@ -24,8 +24,6 @@ export default class Dashboard extends Component {
 
                             <div className='mt-4'> {/* wind */}
                                 <h5>Wind speed is currently {geoData.wind.speed} {parseSpeed(this.props.data.units)} at {geoData.wind.deg} degrees.</h5>
-                                <p>Gust speed is at {geoData.wind.gust} {parseSpeed(this.props.data.units)}.</p>
-
                             </div>
 
                         </div>

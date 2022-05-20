@@ -87,9 +87,7 @@ export default class Weather extends Component {
   }
 
   render() {
-    // const COLOR_CODE = '#4e73ad';
     const COLOR_CODE = sunlightColorTransition(new Date().getHours());
-    // console.log(sunlightColorTransition(20));
     return (
       <>
         <div className='container-fluid bg-light mb-0 p-2'>
